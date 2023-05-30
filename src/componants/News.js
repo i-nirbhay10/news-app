@@ -12,49 +12,54 @@ const News = (props) => {
   const next = () => {
     setpage(page + 1);
     console.log(page + 1);
-    fetchApi();
+    // fetchApi();
   };
 
   const previes = () => {
     setpage(page - 1);
     console.log(page - 1);
-    fetchApi();
+    // fetchApi();
   };
 
   const fetchApi = async () => {
-    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.catagry}&apiKey=${process.env.REACT_APP_KEY}&page=${page}&pagesize=12`;
-    setspin(true);
-    const response = await fetch(url);
-    const res = await response.json();
-    console.log(res);
-
-    setresult(res.totalResults);
-    console.log(result);
-    setartical(
-      <div className="row">
-        {res.articles.map((data) => (
-          <div className="col-lg-4 col-md-4 col-xl-4" key={data.url}>
-            <Newsitem
-              source={data.source.name}
-              urlToImage={data.urlToImage}
-              author={data.author}
-              description={data.description}
-              url={data.url}
-              publishdate={data.publishedAt}
-            />
-          </div>
-        ))}
-      </div>
-    );
-    setspin(false);
+    try {
+      const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.catagry}&apiKey=${process.env.REACT_APP_KEY}&page=${page}&pagesize=12`;
+      setspin(true);
+      const response = await fetch(url);
+      const res = await response.json();
+      // console.log(res);
+      setresult(res.totalResults);
+      // console.log(result);
+      setartical(
+        <div className="row">
+          {res.articles.map((data) => (
+            <div className="col-lg-4 col-md-4 col-xl-4" key={data.url}>
+              <Newsitem
+                source={data.source.name}
+                urlToImage={data.urlToImage}
+                author={data.author}
+                description={data.description}
+                url={data.url}
+                publishdate={data.publishedAt}
+              />
+            </div>
+          ))}
+        </div>
+      );
+      setspin(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   useEffect(() => {
     fetchApi();
-  }, [setartical]);
+  }, [page]);
 
   return (
     <>
       <Nav title={"Khabar.com"} />
+
       <div className="container" style={{ marginTop: "75px" }}>
         <div className="text-center text-capitalize">
           <h1>{props.catagry}- top Headlines</h1>
